@@ -1,0 +1,27 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Post Delete{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center mb-5">Post Delete</h1>
+
+<div>
+    <div class="modal-dialog">
+        <form method="POST" action="/post/delete/{{ post.id }}/" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">{{ post.title }}</h5>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="window.location.href='/post/list/'" type="button" class="btn btn-danger">No</button>
+                <button type="submit" class="btn btn-success">Yes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Post Update{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center mb-5">Post Update</h1>
+
+<a href="/post/list/" class="btn btn-success">Go Back To Post List</a>
+
+<form class="mt-5" method="POST" enctype="multipart/form-data" action="/post/update/{{ post.id }}/">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input name="title" value="{{ post.title }}" type="text" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Image</label>
+        <input name="image" type="file" class="form-control">
+    </div>
+    {% if post.image %}
+    <img src="{{ post.image.url }}" style="width: 100px;height:100px;object-fit: contain;">
+    {% endif %}
+    <div class="mb-3">
+        <label class="form-label">Viewer</label>
+        <input name="viewer" value="{{ post.viewer }}" type="number" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="10">{{ post.description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
