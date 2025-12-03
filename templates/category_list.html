@@ -19,7 +19,7 @@
     <tbody>
         {% for category in categories %}
         <tr>
-            <th scope="row">{{ category.id }}</th>
+            <th scope="row">{{ forloop.counter }}</th>
             <td>{{ category.name }}</td>
             <td>
                 <a href="/category/update/{{ category.id }}/" class="btn btn-primary">Update</a>

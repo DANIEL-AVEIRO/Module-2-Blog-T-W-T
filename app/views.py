@@ -14,34 +14,45 @@ def post_list(request):
 
 
 def post_create(request):
+    categories = CategoryModel.objects.all()  # <=
     if request.method == "GET":
-        return render(request, "post_create.html")
+        return render(request, "post_create.html", {"categories": categories})  # <=
     if request.method == "POST":
         title = request.POST.get("title")
         viewer = request.POST.get("viewer")
         description = request.POST.get("description")
         image = request.FILES.get("image")
+        category = request.POST.get("category")  # ဒါလေးရယ်
 
         post = PostModel.objects.create(
-            title=title, description=description, viewer=viewer, image=image
+            title=title,
+            description=description,
+            viewer=viewer,
+            image=image,
+            category_id=category,  # ဒါလေးရယ်
         )
         post.save()
         return redirect("/post/list/")
 
 
 def post_update(request, pk):
+    categories = CategoryModel.objects.all()
     post = PostModel.objects.get(id=pk)
     if request.method == "GET":
-        return render(request, "post_update.html", {"post": post})
+        return render(
+            request, "post_update.html", {"post": post, "categories": categories}
+        )
     if request.method == "POST":
         title = request.POST.get("title")
         viewer = request.POST.get("viewer")
         description = request.POST.get("description")
         image = request.FILES.get("image")
+        category = request.POST.get("category")
 
         post.title = title
         post.description = description
         post.viewer = viewer
+        post.category_id = category
         if image:
             if post.image:
                 post.image.delete()

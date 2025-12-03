@@ -14,6 +14,7 @@
             <th scope="col">No</th>
             <th scope="col">Image</th>
             <th scope="col">Title</th>
+            <th scope="col">Category</th>
             <th scope="col">Viewer</th>
             <th scope="col">Description</th>
             <th scope="col">Action</th>
@@ -32,12 +33,12 @@
                 {% endif %}
             </td>
             <td>{{ post.title }}</td>
+            <td>{{ post.category.name }}</td>
             <td>
-                {% if post.viewer < 100 %}
-                <span class="badge bg-danger">{{ post.viewer }} - Not Popular</span>
-                {% else %}
-                <span class="badge bg-success">{{ post.viewer }} - Popular</span>
-                {% endif %}
+                {% if post.viewer < 100 %} <span class="badge bg-danger">{{ post.viewer }} - Not Popular</span>
+                    {% else %}
+                    <span class="badge bg-success">{{ post.viewer }} - Popular</span>
+                    {% endif %}
             </td>
             <td>{{ post.description }}</td>
             <td>

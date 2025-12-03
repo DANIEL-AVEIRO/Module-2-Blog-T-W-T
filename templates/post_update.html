@@ -26,6 +26,15 @@
         <input name="viewer" value="{{ post.viewer }}" type="number" class="form-control">
     </div>
     <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-control">
+            <option value="" disabled>Choose a category</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if post.category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
         <label class="form-label">Description</label>
         <textarea name="description" class="form-control" rows="10">{{ post.description }}</textarea>
     </div>
