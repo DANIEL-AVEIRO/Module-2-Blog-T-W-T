@@ -1,11 +1,23 @@
 from django.shortcuts import render, redirect
 from app.models import PostModel, CategoryModel
+from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
 
 def index(request):
-    return render(request, "index.html")
+    search = request.GET.get("search")
+    posts = PostModel.objects.all().order_by("-created_at")
+    if search:
+        posts = posts.filter(
+            Q(title__icontains=search)
+            | Q(description__icontains=search)
+            | Q(category__name__icontains=search)
+        )
+    else:
+        posts = posts
+    return render(request, "index.html", {"posts": posts, "search": search})
 
 
 def post_list(request):
@@ -14,7 +26,7 @@ def post_list(request):
 
 
 def post_create(request):
-    categories = CategoryModel.objects.all()  # <=
+    categories = CategoryModel.objects.all()
     if request.method == "GET":
         return render(request, "post_create.html", {"categories": categories})  # <=
     if request.method == "POST":
@@ -72,6 +84,11 @@ def post_delete(request, pk):
         return redirect("/post/list/")
 
 
+def post_details(request, pk):
+    post = PostModel.objects.get(id=pk)
+    return render(request, "post_details.html", {"post": post})
+
+
 def category_list(request):
     categories = CategoryModel.objects.all()
     return render(request, "category_list.html", {"categories": categories})
@@ -106,3 +123,46 @@ def category_delete(request, pk):
     if request.method == "POST":
         category.delete()
         return redirect("/category/list/")
+
+
+def login_view(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return redirect("/")
+        return render(request, "login.html")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        # if user is not None:
+        if user:
+            login(request, user)
+            return redirect("/")
+        else:
+            return redirect("/login/")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("/login/")
+
+
+from django.contrib.auth.models import User
+
+
+def register(request):
+    if request.method == "GET":
+        return render(request, "register.html")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        user = User.objects.create_user(
+            username=username, email=email, password=password
+        )
+        user.save()
+        # login(request, user)
+        return redirect("/login/")

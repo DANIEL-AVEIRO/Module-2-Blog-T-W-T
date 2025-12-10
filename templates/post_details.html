@@ -1,0 +1,31 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Post Details{% endblock %}
+
+{% block body %}
+{% load humanize %}
+<h1 class="text-center mb-5">Details for {{ post.title }}</h1>
+
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid rounded-start" alt="{{ post.title }}">
+            {% else %}
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgE2ZVQ_3i2YvbYNZFyGVqclC7-eLgOmUp52QB0FtBBuAEC6yJtqygHSQgQ5FgCaeEg0o&usqp=CAU"
+                class="img-fluid rounded-start" alt="{{ post.title }}">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.description }}</p>
+                <p class="card-text"><small class="text-muted">Last updated {{ post.updated_at|naturaltime }}</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

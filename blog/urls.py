@@ -28,8 +28,12 @@ urlpatterns = [
     path("post/create/", views.post_create),
     path("post/update/<int:pk>/", views.post_update),
     path("post/delete/<int:pk>/", views.post_delete),
+    path("post/details/<int:pk>/", views.post_details),
     path("category/list/", views.category_list),
     path("category/create/", views.category_create),
     path("category/update/<int:pk>/", views.category_update),
     path("category/delete/<int:pk>/", views.category_delete),
+    path("login/", views.login_view),
+    path("logout/", views.logout_view),
+    path("register/", views.register),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

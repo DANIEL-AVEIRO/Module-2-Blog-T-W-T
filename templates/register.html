@@ -1,0 +1,29 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center mb-5">Register Form</h1>
+
+<a href="/" class="btn btn-success">Go Back</a>
+
+<form enctype="multipart/form-data" class="mt-5" method="POST" action="/register/">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input name="username" type="text" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input name="email" type="text" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input name="password" type="password" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+{% endblock %}

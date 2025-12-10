@@ -3,20 +3,27 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-
+{% load humanize %}
 <div class="row">
 
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+    {% for post in posts %}
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
         <div class="card">
-            <img src="image is here" class="card-img-top" alt="">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+            {% else %}
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgE2ZVQ_3i2YvbYNZFyGVqclC7-eLgOmUp52QB0FtBBuAEC6yJtqygHSQgQ5FgCaeEg0o&usqp=CAU"
+                class="card-img-top" alt="{{ post.title }}">
+            {% endif %}
             <div class="card-body">
-                <h5 class="card-title">Title is here <span class="badge bg-success">100</span></h5>
-                <p class="card-text">Description is here</p>
-                <p class="text-muted">Create Time is here</p>
-                <a href="#" class="btn btn-primary">View Details</a>
+                <h5 class="card-title">{{ post.title }} <span class="badge bg-success">{{ post.viewer }}</span></h5>
+                <p class="card-text">{{ post.description }}</p>
+                <p class="text-muted">{{ post.created_at|naturalday}}</p>
+                <a href="/post/details/{{ post.id }}/" class="btn btn-primary">View Details</a>
             </div>
         </div>
     </div>
+    {% endfor %}
 
 </div>
 
