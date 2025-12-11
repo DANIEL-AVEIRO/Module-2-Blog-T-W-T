@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class CategoryModel(models.Model):
@@ -23,3 +24,20 @@ class PostModel(models.Model):
     class Meta:
         verbose_name = "Post"
         verbose_name_plural = "Posts"
+
+
+class CommentModel(models.Model):
+    post = models.ForeignKey(PostModel, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
+
+    def __str__(self):
+        return (
+            f"{self.message} is written by {self.author.username} in {self.post.title}"
+        )

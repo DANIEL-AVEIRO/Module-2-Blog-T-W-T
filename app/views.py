@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from app.models import PostModel, CategoryModel
+from app.models import PostModel, CategoryModel, CommentModel
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -86,7 +88,8 @@ def post_delete(request, pk):
 
 def post_details(request, pk):
     post = PostModel.objects.get(id=pk)
-    return render(request, "post_details.html", {"post": post})
+    comments = CommentModel.objects.filter(post_id=post.id).order_by("-created_at")
+    return render(request, "post_details.html", {"post": post, "comments": comments})
 
 
 def category_list(request):
@@ -139,17 +142,16 @@ def login_view(request):
         # if user is not None:
         if user:
             login(request, user)
+            messages.success(request, "Login successfully")
             return redirect("/")
         else:
+            messages.warning(request, "Invalid credential")
             return redirect("/login/")
 
 
 def logout_view(request):
     logout(request)
     return redirect("/login/")
-
-
-from django.contrib.auth.models import User
 
 
 def register(request):
@@ -159,10 +161,35 @@ def register(request):
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        existing_username = User.objects.filter(username=username).exists()
+
+        if existing_username:
+            messages.warning(request, "username already exists")
+            return redirect("/register/")
+
+        if password != confirm_password:
+            messages.error(request, "Password does not match")
+            return redirect("/register/")
 
         user = User.objects.create_user(
             username=username, email=email, password=password
         )
         user.save()
         # login(request, user)
+        messages.success(request, f"Account create successfully {user.username}")
         return redirect("/login/")
+
+
+def comment_create(request, post_id):
+    post = PostModel.objects.get(id=post_id)
+    if request.method == "POST":
+        comment = CommentModel.objects.create(
+            post_id=post.id,
+            author_id=request.user.id,
+            message=request.POST.get("message"),
+        )
+        comment.save()
+        messages.success(request, "Comment successfully")
+        return redirect(f"/post/details/{post.id}/")
