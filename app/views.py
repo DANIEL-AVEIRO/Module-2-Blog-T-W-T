@@ -4,8 +4,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -22,11 +21,13 @@ def index(request):
     return render(request, "index.html", {"posts": posts, "search": search})
 
 
+@login_required(login_url="/login/")
 def post_list(request):
     posts = PostModel.objects.all()
     return render(request, "post_list.html", {"posts": posts})
 
 
+@login_required(login_url="/login/")
 def post_create(request):
     categories = CategoryModel.objects.all()
     if request.method == "GET":
@@ -49,6 +50,7 @@ def post_create(request):
         return redirect("/post/list/")
 
 
+@login_required(login_url="/login/")
 def post_update(request, pk):
     categories = CategoryModel.objects.all()
     post = PostModel.objects.get(id=pk)
@@ -92,6 +94,7 @@ def post_details(request, pk):
     return render(request, "post_details.html", {"post": post, "comments": comments})
 
 
+@login_required(login_url="/login/")
 def category_list(request):
     categories = CategoryModel.objects.all()
     return render(request, "category_list.html", {"categories": categories})
@@ -193,3 +196,10 @@ def comment_create(request, post_id):
         comment.save()
         messages.success(request, "Comment successfully")
         return redirect(f"/post/details/{post.id}/")
+
+
+def comment_delete(request, pk):
+    comment = CommentModel.objects.get(id=pk)
+    comment.delete()
+    messages.success(request, "Comment delete successfully")
+    return redirect(f"/post/details/{comment.post.id}/")

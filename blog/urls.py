@@ -37,4 +37,5 @@ urlpatterns = [
     path("logout/", views.logout_view),
     path("register/", views.register),
     path("comment/create/<int:post_id>/", views.comment_create),
+    path("comment/delete/<int:pk>/", views.comment_delete),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
