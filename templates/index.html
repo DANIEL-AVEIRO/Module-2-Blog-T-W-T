@@ -3,6 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+{% load static %}
 {% load humanize %}
 <div class="row">
 
@@ -12,8 +13,7 @@
             {% if post.image %}
             <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
             {% else %}
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgE2ZVQ_3i2YvbYNZFyGVqclC7-eLgOmUp52QB0FtBBuAEC6yJtqygHSQgQ5FgCaeEg0o&usqp=CAU"
-                class="card-img-top" alt="{{ post.title }}">
+            <img src="{% static 'images/images.jpeg' %}" class="card-img-top" alt="{{ post.title }}">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }} <span class="badge bg-success">{{ post.viewer }}</span></h5>
@@ -24,6 +24,46 @@
         </div>
     </div>
     {% endfor %}
+
+    {% if posts.has_other_pages %}
+    <div style="display: flex; justify-content: center;">
+        <nav aria-label="Topics pagination" class="mb-4">
+            <ul class="pagination">
+                {% if posts.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                {% endif %}
+                {% for page_num in posts.paginator.page_range %}
+                {% if posts.number == page_num %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ page_num }}
+                    </span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 
 </div>
 

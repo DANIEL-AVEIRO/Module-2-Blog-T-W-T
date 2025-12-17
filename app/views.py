@@ -5,11 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def index(request):
     search = request.GET.get("search")
     posts = PostModel.objects.all().order_by("-created_at")
+
     if search:
         posts = posts.filter(
             Q(title__icontains=search)
@@ -18,7 +20,11 @@ def index(request):
         )
     else:
         posts = posts
-    return render(request, "index.html", {"posts": posts, "search": search})
+
+    paginator = Paginator(posts, 4)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "index.html", {"posts": page_obj, "search": search})
 
 
 @login_required(login_url="/login/")
